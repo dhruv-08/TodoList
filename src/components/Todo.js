@@ -2,7 +2,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import React from 'react'
 function Todo(props) {
     return (
-        <List>
+        <List style={{textAlign:"center"}}>
             <ListItem button>
                 <ListItemText primary={props.text} secondary="Faltu"/>
             </ListItem>
