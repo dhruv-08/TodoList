@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import Todo from './Todo'
 import { Button, FormControl, InputAdornment, InputLabel, Menu, MenuItem, NativeSelect, OutlinedInput, Select, TextField } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -7,6 +7,8 @@ import 'react-calendar/dist/Calendar.css';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import Axios from 'axios';
+import { List, ListItem, ListItemText } from '@material-ui/core'
+import Checkbox from '@material-ui/core/Checkbox';
 function Data() {
     var d=new Date();
     var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -15,10 +17,23 @@ function Data() {
     const [input, setInput] = useState('');
     const [inp, setinp] = useState([]);
     const [cal, setcal] = useState("");
+    const [lis, setlis] = useState([]);
     const [date, setdate] = useState(new Date())
     const [success, setsuccess] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
-
+    const [checked, setChecked] =useState(false);
+    const [hover, sethover] = useState(true);
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+    };
+    useEffect(() => {
+        async function fun(){
+            const val=await Axios.get("/todolist");
+            console.log(val.data[0].list)
+            setlis(val.data[0].list);
+        }
+        fun();
+    }, [input])
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -42,7 +57,7 @@ function Data() {
         .catch((err)=>{
             console.log("err");
         })
-        setinp([...inp,s.substr(4,12)]);
+        setinp([...inp,s.substr(4,11)]);
       }
       else{
         Axios.post("/todo",({t:input,dat:cal}))
@@ -51,11 +66,11 @@ function Data() {
         })
         .catch((err)=>{
             console.log("err");
-        })
+        });
         setinp([...inp,cal]);
         var dd=new Date();
           var s=dd.toString()
-          setcal(s.substr(4,12));
+          setcal(s.substr(4,11));
       }
       setTodo([...todo,input]);
       setInput('');
@@ -63,7 +78,7 @@ function Data() {
    const onChange=date=>{
        setdate(date);
         var e=date.toString();
-       setcal(e.substr(4,12));
+       setcal(e.substr(4,11));
    }
     return (
         <div style={{paddingLeft:"20%"}}>
@@ -100,12 +115,15 @@ function Data() {
                             </FormControl></form><br/><br/>
                 
                 </div>
-                {todo.length===0 && <h1 style={{textAlign:"center"}}>Empty<span style={{paddingLeft:"1%",paddingTop:"10%",fontSize:"80px"}}><SentimentVeryDissatisfiedIcon/></span></h1>}
-                <ul>
-                    {todo.map((t,idx)=>(
-                        <Todo cal={inp[idx]} text={todo[idx]}/>
+                {lis.length===0 && <h1 style={{textAlign:"center"}}>Empty<span style={{paddingLeft:"1%",paddingTop:"10%",fontSize:"80px"}}><SentimentVeryDissatisfiedIcon/></span></h1>}
+                {lis.map((t,idx)=>(
+                <List key={lis[idx]._id} style={{textAlign:"center"}}>
+                    <ListItem button>
+            <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
+                        {hover==true && <p >Test</p>}
+                    </ListItem>
+                </List>
                     ))}
-                </ul>
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
                  <Alert severity="success">Successfully added </Alert></div>}
         </div>

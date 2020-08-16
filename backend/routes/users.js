@@ -59,11 +59,18 @@ router.post('/todo',(req,res,next)=>{
           date:req.body.dat
         }}
       }, function(err, affected, resp) {
-        console.log(resp);
+        console.log("Ohh");
      });
     }
   });
 });
+router.get('/todolist',(req,res,next)=>{
+  User.find({username:Logname})
+  .then((usr)=>{
+      console.log(usr);
+      res.send(usr);
+  });
+})
 router.get('/logout',(req,res,next)=>{
   req.session.destroy();
   res.clearCookie('session_id');
