@@ -28,7 +28,7 @@ import Inbox from './Inbox'
 import Today from './Today'
 import Upcoming from './Upcoming'
 import Project from './Project'
-import {Switch,Route,Link} from 'react-router-dom'
+import {Switch,Route,Link, Redirect} from 'react-router-dom'
 import HomeIcon from '@material-ui/icons/Home';
 const drawerWidth = 240;
 
@@ -159,7 +159,7 @@ function Nav() {
         <List>
           {['Home','Inbox', 'Today', 'Upcoming', 'Project'].map((text, index) => (
             <ListItem button key={text} style={{width:"300px"}}>
-                <Link to="/">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
+                <Link to="/home">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
                 <Link to="/inbox">{index===1 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}}/> </ListItemIcon>}</Link>
                 <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
                 <Link to="/upcoming">{index===3 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}</Link>
@@ -172,11 +172,12 @@ function Nav() {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route exact path="/" component={()=><Data/>}/>
+          <Route exact path="/home" component={()=><Data/>}/>
           <Route exact path="/inbox" component={()=><Inbox/>}/>
           <Route exact path="/today" component={()=><Today/>}/>
           <Route exact path="/upcoming" component={()=><Upcoming/>}/>
           <Route exact path="/project" component={()=><Project/>}/>
+          <Redirect to="/home"/>
       </Switch>
       </main>
     </div>

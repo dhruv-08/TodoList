@@ -6,6 +6,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import Axios from 'axios';
 function Data() {
     var d=new Date();
     var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -34,9 +35,23 @@ function Data() {
       if(cal.length=="0"){
         var dd=new Date();
         var s=dd.toString()
+        Axios.post("/todo",({t:input,dat:s}))
+        .then((res)=>{
+            console.log("Done");
+        })
+        .catch((err)=>{
+            console.log("err");
+        })
         setinp([...inp,s.substr(4,12)]);
       }
       else{
+        Axios.post("/todo",({t:input,dat:cal}))
+        .then((res)=>{
+            console.log("Done");
+        })
+        .catch((err)=>{
+            console.log("err");
+        })
         setinp([...inp,cal]);
         var dd=new Date();
           var s=dd.toString()
