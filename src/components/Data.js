@@ -33,7 +33,15 @@ function Data() {
             setlis(val.data[0].list);
         }
         fun();
-    }, [input])
+    }, [input]);
+    function handleedit(idx){
+        Axios.post("/edit",({idx}))
+        .then(res=>{
+            console.log("Done!!");
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -135,7 +143,7 @@ function Data() {
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
                     <ListItem button>
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
-                        <p ><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
+                        <p onClick={()=>handleedit(idx)}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
                 </List>
                     ))}

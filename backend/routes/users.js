@@ -75,6 +75,16 @@ router.post('/delup',(req,res,next)=>{
      });
     }
   });
+});
+router.post('/edit',(req,res,next)=>{
+  User.findOne({username:Logname})
+  .then((user)=>{
+    if(user){
+      // User.findOne(user.list)
+      console.log(req.body.idx);
+      console.log(user.list[req.body.idx].text);
+    }
+  })
 })
 router.get('/todolist',(req,res,next)=>{
   User.find({username:Logname})
