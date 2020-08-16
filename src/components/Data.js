@@ -15,14 +15,15 @@ function Data() {
       setInput('');
     }
     return (
-        <div style={{textAlign:"center"}}>
+        <div style={{paddingLeft:"20%"}}>
+            <div style={{paddingLeft:"5%"}}>
             <h1>TODAY<span style={{fontSize:"10px",color:"grey"}}>{days[d.getDay()]} {d.getDate()} {months[d.getMonth()]}</span></h1>
                 <form>
                 <TextField value={input} onChange={(e)=>setInput(e.target.value)} id="standard-basic" label="Write Todo list" />
                 <Button disabled={!input} type="submit" onClick={todolist} variant="contained" color="primary">
                     ADD
                 </Button>
-                </form>
+                </form></div>
                 <ul>
                     {todo.map(t=>(
                         <Todo text={t}/>

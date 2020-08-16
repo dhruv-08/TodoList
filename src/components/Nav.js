@@ -24,6 +24,12 @@ import AddIcon from '@material-ui/icons/Add';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import SettingsIcon from '@material-ui/icons/Settings';
+import Inbox from './Inbox'
+import Today from './Today'
+import Upcoming from './Upcoming'
+import Project from './Project'
+import {Switch,Route,Link} from 'react-router-dom'
+import HomeIcon from '@material-ui/icons/Home';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -151,12 +157,13 @@ function Nav() {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Today', 'Upcoming', 'Project'].map((text, index) => (
-            <ListItem button key={text}>
-                {index===0 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}}/> </ListItemIcon>}
-                {index===1 && <ListItemIcon><TodayIcon style={{color:"#5cb85c"}}/></ListItemIcon>}
-                {index===2 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}
-                {index===3 && <ListItemIcon><AccountTreeIcon style={{color:"#5bc0de"}}/></ListItemIcon>}
+          {['Home','Inbox', 'Today', 'Upcoming', 'Project'].map((text, index) => (
+            <ListItem button key={text} style={{width:"300px"}}>
+                <Link to="/">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
+                <Link to="/inbox">{index===1 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}}/> </ListItemIcon>}</Link>
+                <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
+                <Link to="/upcoming">{index===3 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}</Link>
+                <Link to="/project">{index===4 && <ListItemIcon><AccountTreeIcon style={{color:"#5bc0de"}}/></ListItemIcon>}</Link>
               <ListItemText primary={text} />
             </ListItem>
           ))}
@@ -164,7 +171,13 @@ function Nav() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Data/>
+        <Switch>
+          <Route exact path="/" component={()=><Data/>}/>
+          <Route exact path="/inbox" component={()=><Inbox/>}/>
+          <Route exact path="/today" component={()=><Today/>}/>
+          <Route exact path="/upcoming" component={()=><Upcoming/>}/>
+          <Route exact path="/project" component={()=><Project/>}/>
+      </Switch>
       </main>
     </div>
     )
