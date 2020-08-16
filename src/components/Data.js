@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import Todo from './Todo'
+import EditIcon from '@material-ui/icons/Edit';
 import { Button, FormControl, InputAdornment, InputLabel, Menu, MenuItem, NativeSelect, OutlinedInput, Select, TextField } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Calendar from 'react-calendar';
@@ -9,6 +9,7 @@ import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissa
 import Axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox';
+import CancelIcon from '@material-ui/icons/Cancel';
 function Data() {
     var d=new Date();
     var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -22,7 +23,6 @@ function Data() {
     const [success, setsuccess] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] =useState(false);
-    const [hover, sethover] = useState(true);
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -37,7 +37,22 @@ function Data() {
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
-  
+    function handledel(list){
+        console.log("OHH");
+        var arr=lis;
+        for(var i=0;i<arr.length;i++){
+            if(arr[i]._id===list._id){
+                arr.splice(i,1);
+            }
+        }
+        Axios.post("/delup",({arr}))
+        .then((res)=>{
+            console.log("Done!!");
+        }).catch(err=>{
+            console.log(err);
+        })
+        window.location.reload(false);
+    }
     const handleClose = () => {
       setAnchorEl(null);
     };
@@ -120,7 +135,7 @@ function Data() {
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
                     <ListItem button>
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
-                        {hover==true && <p >Test</p>}
+                        <p ><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
                 </List>
                     ))}

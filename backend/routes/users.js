@@ -64,6 +64,18 @@ router.post('/todo',(req,res,next)=>{
     }
   });
 });
+router.post('/delup',(req,res,next)=>{
+  User.find({username:Logname})
+  .then((user)=>{
+    if(user){
+      User.update({username:Logname},{
+        list:req.body.arr
+      }, function(err, affected, resp) {
+        console.log("Ohh");
+     });
+    }
+  });
+})
 router.get('/todolist',(req,res,next)=>{
   User.find({username:Logname})
   .then((usr)=>{
