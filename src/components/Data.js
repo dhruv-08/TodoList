@@ -30,7 +30,7 @@ function Data() {
       setsuccess(true);
             setTimeout(() => {
                 setsuccess(false);
-            }, 3000);
+            }, 4000);
       if(cal.length=="0"){
         var dd=new Date();
         var s=dd.toString()
