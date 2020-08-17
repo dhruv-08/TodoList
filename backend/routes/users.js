@@ -91,8 +91,9 @@ router.get('/todolist',(req,res,next)=>{
       res.send(usr);
   });
 })
-router.get('/logout',(req,res,next)=>{
+router.get('/logout',async(req,res,next)=>{
+  await req.logout();
   req.session.destroy();
-  res.clearCookie('session_id');
+  res.clearCookie("session_id",{path:"/",httpOnly:true});
 });
 module.exports = router;

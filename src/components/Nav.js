@@ -161,7 +161,7 @@ function Nav() {
             <ListItem button key={text} style={{width:"300px"}}>
                 <Link to="/home">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
                 <Link to="/inbox">{index===1 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}} /> </ListItemIcon>}</Link>
-                <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
+                <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#d9534f"}}/></ListItemIcon>}</Link>
                 <Link to="/upcoming">{index===3 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}</Link>
                 <Link to="/project">{index===4 && <ListItemIcon><AccountTreeIcon style={{color:"#5bc0de"}}/></ListItemIcon>}</Link>
               <ListItemText primary={text} />

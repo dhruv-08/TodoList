@@ -21,6 +21,7 @@ function Data() {
     const [lis, setlis] = useState([]);
     const [date, setdate] = useState(new Date())
     const [success, setsuccess] = useState(false);
+    const [error, seterror] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] =useState(false);
     const [under, setunder] = useState((d.getDate()).toString());
@@ -30,7 +31,6 @@ function Data() {
     useEffect(() => {
         async function fun(){
             const val=await Axios.get("/todolist");
-            console.log(val.data[0].list)
             setlis(val.data[0].list);
         }
         fun();
@@ -48,7 +48,10 @@ function Data() {
       setAnchorEl(event.currentTarget);
     };
     function handledel(list){
-        console.log("OHH");
+        seterror(true);
+        setTimeout(() => {
+            seterror(false);
+        }, 4000);
         var arr=lis;
         for(var i=0;i<arr.length;i++){
             if(arr[i]._id===list._id){
@@ -61,7 +64,6 @@ function Data() {
         }).catch(err=>{
             console.log(err);
         })
-        window.location.reload(false);
     }
     const handleClose = () => {
       setAnchorEl(null);
@@ -98,7 +100,6 @@ function Data() {
         var dd=new Date();
           var s=dd.toString()
           setcal(s.substr(4,11));
-          window.location.reload(false);
       }
       setTodo([...todo,input]);
       setInput('');
@@ -150,11 +151,13 @@ function Data() {
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
                         <p onClick={()=>handleedit(idx,lis[idx])}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
-                    {console.log(under)}<hr style={under===lis[idx].date.substring(4,6)?{border: "1px solid green"}:{border: "1px solid red"}}/>
+                    <hr style={(under===lis[idx].date.substring(4,6)&&{border: "1px solid #0275d8"}) || (under>lis[idx].date.substring(4,6)&&{border: "1px solid #d9534f"}) || (under<lis[idx].date.substring(4,6)&&{border: "1px solid #5cb85c"})}/>
                 </List>
                     ))}
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
-                 <Alert severity="success">Successfully added </Alert></div>}
+                 <Alert severity="success">Added Successfully</Alert></div>}
+                 {error===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
+                 <Alert severity="error">Remove Successfully</Alert></div>}
         </div>
     )
 }
