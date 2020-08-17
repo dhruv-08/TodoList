@@ -11,7 +11,19 @@ var User=new schema({
             type:String,
             required:true
         }
-    }]
+    }],
+        beforecount:{
+            type:Number,
+            default:0
+        },
+        count:{
+            type:Number,
+            default:0
+        },
+        aftercount:{
+            type:Number,
+            default:0
+        }
 });
 User.plugin(plm);
 module.exports=mongoose.model('User',User);

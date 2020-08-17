@@ -10,6 +10,7 @@ import Axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { PieChart } from 'react-minimal-pie-chart';
 function Data() {
     var d=new Date();
     var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -21,6 +22,7 @@ function Data() {
     const [inp, setinp] = useState([]);
     const [cal, setcal] = useState("");
     const [lis, setlis] = useState([]);
+    const [change, setchange] = useState(false);
     const [index, setindex] = useState('')
     const [date, setdate] = useState(new Date())
     const [success, setsuccess] = useState(false);
@@ -29,20 +31,70 @@ function Data() {
     const [checked, setChecked] =useState(false);
     const [under, setunder] = useState((d.getDate()).toString());
     const [open, setOpen] = useState(false);
-    // onClick={()=>handleedit(idx,lis[idx])}
+    const [beforecount, setbeforecount] = useState(0)
+    const [count, setcount] = useState(0)
+    const [aftercount, setaftercount] = useState(0)
     const handleClickOpen = (idx) => {
         setindex(idx);
         setOpen(true);
     };
-    const handleChange = (event) => {
-        setChecked(event.target.checked);
-    };
+    function handleChange(event,list,index) {
+        if(under===list.date.substring(4,6)){
+            Axios.post("/count",({index}))
+            .then(res=>{
+                console.log("Done!!");
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        else if(under<list.date.substring(4,6)){
+            Axios.post("/beforecount",({index}))
+            .then(res=>{
+                console.log("Done!!");
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        else if(under>list.date.substring(4,6)){
+            Axios.post("/aftercount",({index}))
+            .then(res=>{
+                console.log("Done!!");
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        setChecked(!event.target.checked);
+            var arr=lis;
+        for(var i=0;i<arr.length;i++){
+            if(arr[i]._id===list._id){
+                arr.splice(i,1);
+            }
+        }
+        Axios.post("/delup",({arr}))
+        .then((res)=>{
+            console.log("Done!!");
+        }).catch(err=>{
+            console.log(err);
+        })
+        setchange(true);
+            setTimeout(() => {
+                setchange(false);
+            }, 4000);
+            window.location.reload(true);
+    }
     useEffect(() => {
         async function fun(){
             const val=await Axios.get("/todolist");
             setlis(val.data[0].list);
         }
+        async function send(){
+            const val=await Axios.get("/data");
+            setcount(val.data[0].count);
+            setaftercount(val.data[0].aftercount);
+            setbeforecount(val.data[0].beforecount);
+        }
         fun();
+        send();
     }, [input,edit]);
     function handleedit(e){
         e.preventDefault();
@@ -64,10 +116,10 @@ function Data() {
       setAnchorEl(event.currentTarget);
     };
     function handledel(list){
-        seterror(true);
-        setTimeout(() => {
-            seterror(false);
-        }, 4000);
+            seterror(true);
+            setTimeout(() => {
+                seterror(false);
+            }, 4000);
         var arr=lis;
         for(var i=0;i<arr.length;i++){
             if(arr[i]._id===list._id){
@@ -128,6 +180,13 @@ function Data() {
    }
     return (
         <div style={{paddingLeft:"20%"}}>
+            <PieChart style={{width:"100px",height:"100px"}}
+                data={[
+                    { title: 'On date', value: count, color: '#E38627' },
+                    { title: 'before date', value: beforecount, color: '#C13C37' },
+                    { title: 'after date', value: aftercount, color: '#6A2135' },
+                ]}
+                />
             <div style={{paddingLeft:"6%"}}>
             <h1>TODAY<span style={{fontSize:"10px",color:"grey"}}>{days[d.getDay()]} {d.getDate()} {months[d.getMonth()]}</span></h1>
             <form>
@@ -165,8 +224,8 @@ function Data() {
                 {lis.map((t,idx)=>(
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
                     <ListItem button >
-            <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
-                        <p onClick={()=>handleClickOpen(idx)}><EditIcon /></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
+            <ListItemText> <Checkbox checked={checked} onChange={(e)=>handleChange(e,lis[idx],idx)} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
+                        <p onClick={()=>handleClickOpen(idx)}><EditIcon /></p><p style={{paddingLeft:"2%"}} onClick={(e)=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
                     <hr style={(under===lis[idx].date.substring(4,6)&&{border: "1px solid #0275d8"}) || (under>lis[idx].date.substring(4,6)&&{border: "1px solid #d9534f"}) || (under<lis[idx].date.substring(4,6)&&{border: "1px solid #5cb85c"})}/>
                 </List>
@@ -188,6 +247,8 @@ function Data() {
                 </Dialog>}
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
                  <Alert severity="success">Added Successfully</Alert></div>}
+                 {change===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
+                 <Alert severity="success">Successfully Done the task</Alert></div>}
                  {editsuc===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
                  <Alert severity="success">Edit Successfully</Alert></div>}
                  {error===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>

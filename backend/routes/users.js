@@ -89,6 +89,51 @@ router.post('/edit',(req,res,next)=>{
     }
   })
 })
+router.get("/data",(req,res,next)=>{
+  User.find({username:req.session.passport.user})
+  .then((user)=>{
+      res.send(user);
+  });
+})
+router.post("/count",(req,res,next)=>{
+  User.findOne({username:req.session.passport.user})
+  .then((user)=>{
+    if(user){
+      var val=user.count+1;
+      User.update({username:req.session.passport.user},{
+        count:val
+      }, function(err, affected, resp) {
+        console.log("Ohh");
+     });
+    }
+  })
+});
+router.post("/beforecount",(req,res,next)=>{
+  User.findOne({username:req.session.passport.user})
+  .then((user)=>{
+    if(user){
+      var val=user.beforecount+1;
+      User.update({username:req.session.passport.user},{
+        beforecount:val
+      }, function(err, affected, resp) {
+        console.log("Ohh");
+     });
+    }
+  })
+})
+router.post("/aftercount",(req,res,next)=>{
+  User.findOne({username:req.session.passport.user})
+  .then((user)=>{
+    if(user){
+      var val=user.aftercount+1;
+      User.update({username:req.session.passport.user},{
+        aftercount:val
+      }, function(err, affected, resp) {
+        console.log("Ohh");
+     });
+    }
+  })
+})
 router.get('/todolist',(req,res,next)=>{
   User.find({username:req.session.passport.user})
   .then((usr)=>{
