@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose=require("mongoose");
 var session=require("express-session");
-var FileStore=require("session-file-store")(session);
+require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var bodyParser=require("body-parser");
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
   name:"session_id",
-  secret:"12345-67890-09876-54321",
+  secret:process.env.SECRET,
   saveUninitialized:true,
   resave:false,
   store:sessionMongo,
