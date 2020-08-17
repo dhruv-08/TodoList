@@ -78,9 +78,9 @@ router.post('/edit',(req,res,next)=>{
   User.findOne({username:req.session.passport.user})
   .then((user)=>{
     if(user){
-      var list=user.list[req.body.idx]._id;
+      var list=user.list[req.body.index]._id;
       User.update({username:req.session.passport.user,"list._id":list},{
-        $set: { "list.$.text" : "hello" }
+        $set: { "list.$.text" : req.body.edit }
       }, function(err, affected, resp) {
         console.log("Ohh");
      });

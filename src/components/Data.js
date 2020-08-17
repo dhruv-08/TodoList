@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import EditIcon from '@material-ui/icons/Edit';
-import { Button, FormControl, InputAdornment, InputLabel, Menu, MenuItem, NativeSelect, OutlinedInput, Select, TextField } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputAdornment, InputLabel, Menu, MenuItem, NativeSelect, OutlinedInput, Select, TextField } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -16,15 +16,24 @@ function Data() {
     var days = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
     const [todo, setTodo] = useState([]);
     const [input, setInput] = useState('');
+    const [edit, setedit] = useState('');
+    const [editsuc, seteditsuc] = useState(false);
     const [inp, setinp] = useState([]);
     const [cal, setcal] = useState("");
     const [lis, setlis] = useState([]);
+    const [index, setindex] = useState('')
     const [date, setdate] = useState(new Date())
     const [success, setsuccess] = useState(false);
     const [error, seterror] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] =useState(false);
     const [under, setunder] = useState((d.getDate()).toString());
+    const [open, setOpen] = useState(false);
+    // onClick={()=>handleedit(idx,lis[idx])}
+    const handleClickOpen = (idx) => {
+        setindex(idx);
+        setOpen(true);
+    };
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -34,15 +43,22 @@ function Data() {
             setlis(val.data[0].list);
         }
         fun();
-    }, [input]);
-    function handleedit(idx,list){
-        var a=list._id
-        Axios.post("/edit",({a,idx}))
+    }, [input,edit]);
+    function handleedit(e){
+        e.preventDefault();
+        seteditsuc(true);
+            setTimeout(() => {
+                seteditsuc(false);
+            }, 4000);
+        Axios.post("/edit",({edit,index}))
         .then(res=>{
             console.log("Done!!");
         }).catch(err=>{
             console.log(err);
         })
+        setedit('');
+        setOpen(false);
+        setindex('');
     }
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -150,13 +166,30 @@ function Data() {
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
                     <ListItem button >
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
-                        <p onClick={()=>handleedit(idx,lis[idx])}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
+                        <p onClick={()=>handleClickOpen(idx)}><EditIcon /></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
                     <hr style={(under===lis[idx].date.substring(4,6)&&{border: "1px solid #0275d8"}) || (under>lis[idx].date.substring(4,6)&&{border: "1px solid #d9534f"}) || (under<lis[idx].date.substring(4,6)&&{border: "1px solid #5cb85c"})}/>
                 </List>
                     ))}
+                    {open===true &&<Dialog
+                    open={open}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title" ><span style={{fontWeight:"bold"}}>Want to update todo-list?</span></DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                    <form autoComplete="off" onSubmit={(e)=>handleedit(e)}>
+                        <TextField  value={edit} onChange={(e)=>setedit(e.target.value)} id="standard-basic" label="Edit" />
+                        <Button type="submit" variant="contained" color="secondary">Edit</Button>
+                    </form>
+                    </DialogContentText>
+                    </DialogContent>
+                </Dialog>}
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
                  <Alert severity="success">Added Successfully</Alert></div>}
+                 {editsuc===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
+                 <Alert severity="success">Edit Successfully</Alert></div>}
                  {error===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
                  <Alert severity="error">Remove Successfully</Alert></div>}
         </div>
