@@ -12,6 +12,7 @@ function App() {
           <Route exact path="/today" component={()=><Nav/>}/>
           <Route exact path="/upcoming" component={()=><Nav/>}/>
           <Route exact path="/project" component={()=><Nav/>}/>
+          <Route exact path="/logout" component={()=><Nav/>}/>
       </Switch>
     </div>
   );

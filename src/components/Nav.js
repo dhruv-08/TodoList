@@ -30,6 +30,9 @@ import Upcoming from './Upcoming'
 import Project from './Project'
 import {Switch,Route,Link, Redirect} from 'react-router-dom'
 import HomeIcon from '@material-ui/icons/Home';
+import Login from './Login'
+import Axios from 'axios';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -104,6 +107,14 @@ function Nav() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  function handleLogout(){
+    Axios.get("/logout")
+    .then(res=>{
+      console.log("Done!!");
+    }).catch(err=>{
+      console.log(err);
+    })
+  }
     return (
         <div className={classes.root}>
       <CssBaseline />
@@ -157,13 +168,14 @@ function Nav() {
         </div>
         <Divider />
         <List>
-          {['Home','Inbox', 'Today', 'Upcoming', 'Project'].map((text, index) => (
+          {['Home','Inbox', 'Today', 'Upcoming', 'Project','logout'].map((text, index) => (
             <ListItem button key={text} style={{width:"300px"}}>
                 <Link to="/home">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
                 <Link to="/inbox">{index===1 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}} /> </ListItemIcon>}</Link>
                 <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#d9534f"}}/></ListItemIcon>}</Link>
                 <Link to="/upcoming">{index===3 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}</Link>
                 <Link to="/project">{index===4 && <ListItemIcon><AccountTreeIcon style={{color:"#5bc0de"}}/></ListItemIcon>}</Link>
+                <Link to="/">{index===5 && <ListItemIcon><ExitToAppIcon style={{color:"#d9534f"}} onClick={()=>handleLogout()}/></ListItemIcon>}</Link>
               <ListItemText primary={text} />
             </ListItem>
           ))}
@@ -177,7 +189,8 @@ function Nav() {
           <Route exact path="/today" component={()=><Today/>}/>
           <Route exact path="/upcoming" component={()=><Upcoming/>}/>
           <Route exact path="/project" component={()=><Project/>}/>
-          <Redirect to="/home/todo"/>
+          <Route exact path="/" component={()=><Login/>}/>
+          <Redirect to="/home"/>
       </Switch>
       </main>
     </div>

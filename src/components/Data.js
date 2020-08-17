@@ -37,7 +37,7 @@ function Data() {
     }, [input]);
     function handleedit(idx,list){
         var a=list._id
-        Axios.post("/edit",({a}))
+        Axios.post("/edit",({a,idx}))
         .then(res=>{
             console.log("Done!!");
         }).catch(err=>{
@@ -103,6 +103,7 @@ function Data() {
       }
       setTodo([...todo,input]);
       setInput('');
+      window.location.reload(true);
     }
    const onChange=date=>{
        setdate(date);
@@ -144,7 +145,7 @@ function Data() {
                             </FormControl></form><br/><br/>
                 
                 </div>
-                {lis.length===0 && <h1 style={{textAlign:"center"}}>Empty<span style={{paddingLeft:"1%",paddingTop:"10%",fontSize:"80px"}}><SentimentVeryDissatisfiedIcon/></span></h1>}
+                {lis.length===0 &&<span style={{textAlign:"center",paddingLeft:"50%"}}><SentimentVeryDissatisfiedIcon style={{fontSize:"50"}}/></span>}
                 {lis.map((t,idx)=>(
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
                     <ListItem button >
