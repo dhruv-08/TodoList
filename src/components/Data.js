@@ -23,6 +23,7 @@ function Data() {
     const [success, setsuccess] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] =useState(false);
+    const [under, setunder] = useState(true)
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -34,8 +35,9 @@ function Data() {
         }
         fun();
     }, [input]);
-    function handleedit(idx){
-        Axios.post("/edit",({idx}))
+    function handleedit(idx,list){
+        var a=list._id
+        Axios.post("/edit",({a}))
         .then(res=>{
             console.log("Done!!");
         }).catch(err=>{
@@ -73,7 +75,7 @@ function Data() {
       if(cal.length=="0"){
         var dd=new Date();
         var s=dd.toString()
-        Axios.post("/todo",({t:input,dat:s}))
+        Axios.post("/todo",({t:input,dat:s.substr(4,11)}))
         .then((res)=>{
             console.log("Done");
         })
@@ -90,10 +92,12 @@ function Data() {
         .catch((err)=>{
             console.log("err");
         });
+        
         setinp([...inp,cal]);
         var dd=new Date();
           var s=dd.toString()
           setcal(s.substr(4,11));
+          window.location.reload(false);
       }
       setTodo([...todo,input]);
       setInput('');
@@ -141,10 +145,11 @@ function Data() {
                 {lis.length===0 && <h1 style={{textAlign:"center"}}>Empty<span style={{paddingLeft:"1%",paddingTop:"10%",fontSize:"80px"}}><SentimentVeryDissatisfiedIcon/></span></h1>}
                 {lis.map((t,idx)=>(
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>
-                    <ListItem button>
+                    <ListItem button >
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
-                        <p onClick={()=>handleedit(idx)}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
+                        <p onClick={()=>handleedit(idx,lis[idx])}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
+                    <hr style={under===true?{border: "1px solid green"}:{border: "1px solid red"}}/>
                 </List>
                     ))}
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>

@@ -11,13 +11,21 @@ var usersRouter = require('./routes/users');
 var bodyParser=require("body-parser");
 var app = express();
 var passport=require('passport');
+var MongoStore=require('connect-mongodb-session')(session);
 var authenticate = require('./authenticate');
 app.use(bodyParser.json());
+const dbOptions={
+  useNewUrlParser:true,
+  useUnifiedTopology:true,
+}
 var connect=mongoose.connect("mongodb://localhost:27017/new");
 connect.then((db)=>{
   console.log("Connected Successfully!");
 })
-// view engine setup
+const sessionMongo=new MongoStore({
+  uri:"mongodb://localhost:27017/new",
+  collection:"session"
+})
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -28,9 +36,12 @@ app.use(cookieParser());
 app.use(session({
   name:"session_id",
   secret:"12345-67890-09876-54321",
-  saveUninitialized:false,
+  saveUninitialized:true,
   resave:false,
-  store:new FileStore()
+  store:sessionMongo,
+  cookie:{
+    maxAge:new Date(Date.now() + (1000*60*60*24))
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

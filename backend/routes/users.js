@@ -30,12 +30,10 @@ router.post('/signup', (req, res, next) => {
     }
   });
 });
-var Logname="t";
 router.post('/login', (req, res) => {
   User.findOne({username:req.body.username})
   .then((user)=>{
       if(user){
-        Logname=req.body.username;
         passport.authenticate('local')(req, res, () => {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
@@ -50,10 +48,10 @@ router.post('/login', (req, res) => {
   })
 });
 router.post('/todo',(req,res,next)=>{
-  User.find({username:Logname})
+  User.find({username:req.session.passport.user})
   .then((user)=>{
     if(user){
-      User.update({username:Logname},{
+      User.update({username:req.session.passport.user},{
         $push:{"list":{
           text:req.body.t,
           date:req.body.dat
@@ -65,10 +63,10 @@ router.post('/todo',(req,res,next)=>{
   });
 });
 router.post('/delup',(req,res,next)=>{
-  User.find({username:Logname})
+  User.find({username:req.session.passport.user})
   .then((user)=>{
     if(user){
-      User.update({username:Logname},{
+      User.update({username:req.session.passport.user},{
         list:req.body.arr
       }, function(err, affected, resp) {
         console.log("Ohh");
@@ -77,7 +75,7 @@ router.post('/delup',(req,res,next)=>{
   });
 });
 router.post('/edit',(req,res,next)=>{
-  User.findOne({username:Logname})
+  User.findOne({username:req.session.passport.user})
   .then((user)=>{
     if(user){
       // User.findOne(user.list)
@@ -87,7 +85,7 @@ router.post('/edit',(req,res,next)=>{
   })
 })
 router.get('/todolist',(req,res,next)=>{
-  User.find({username:Logname})
+  User.find({username:req.session.passport.user})
   .then((usr)=>{
       console.log(usr);
       res.send(usr);
