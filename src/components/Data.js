@@ -23,7 +23,7 @@ function Data() {
     const [success, setsuccess] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [checked, setChecked] =useState(false);
-    const [under, setunder] = useState(true)
+    const [under, setunder] = useState((d.getDate()).toString());
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -82,6 +82,7 @@ function Data() {
         .catch((err)=>{
             console.log("err");
         })
+        setcal(s.substr(4,11));
         setinp([...inp,s.substr(4,11)]);
       }
       else{
@@ -149,7 +150,7 @@ function Data() {
             <ListItemText> <Checkbox checked={checked} onChange={handleChange} onClick={()=>checked===true?console.log("Not checked"):console.log("checked")} inputProps={{ 'aria-label': 'primary checkbox' }}/>{lis[idx].text}<span style={{paddingLeft:"1%",fontSize:"10px",color:"grey"}}>{lis[idx].date}</span></ListItemText>
                         <p onClick={()=>handleedit(idx,lis[idx])}><EditIcon/></p><p style={{paddingLeft:"2%"}} onClick={()=>handledel(lis[idx])}><CancelIcon/></p>
                     </ListItem>
-                    <hr style={under===true?{border: "1px solid green"}:{border: "1px solid red"}}/>
+                    {console.log(under)}<hr style={under===lis[idx].date.substring(4,6)?{border: "1px solid green"}:{border: "1px solid red"}}/>
                 </List>
                     ))}
                 {success===true && <div style={{position:"fixed",bottom:"20px",left:"42%"}}>
