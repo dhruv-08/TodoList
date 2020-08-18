@@ -13,7 +13,6 @@ router.post('/signup', (req, res, next) => {
   const user=new User({username: req.body.username})
   User.register(user, 
     req.body.password, (err, user) => {
-      console.log("hehe");
     if(err) {
       console.log(err);
       res.statusCode = 500;
@@ -21,7 +20,6 @@ router.post('/signup', (req, res, next) => {
       res.json({err: err});
     }
     else {
-      console.log(user);
       passport.authenticate('local')(req, res, () => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -97,8 +95,6 @@ router.post('/edit',(req,res,next)=>{
       }, function(err, affected, resp) {
         console.log("Ohh");
      });
-      console.log(req.body.a);
-      console.log(user.list[req.body.idx].text);
     }
   })
 })

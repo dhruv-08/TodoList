@@ -16,18 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import TodayIcon from '@material-ui/icons/Today';
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import AddIcon from '@material-ui/icons/Add';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import PieChartIcon from '@material-ui/icons/PieChart';
-import SettingsIcon from '@material-ui/icons/Settings';
-import Inbox from './Inbox'
-import Today from './Today'
-import Upcoming from './Upcoming'
-import Project from './Project'
 import {Switch,Route,Link, Redirect} from 'react-router-dom'
 import HomeIcon from '@material-ui/icons/Home';
 import Login from './Login'

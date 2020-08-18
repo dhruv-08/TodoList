@@ -130,9 +130,6 @@ function Data() {
     };
     const todolist=(e)=>{
       e.preventDefault();
-      if(cal<under && cal!=""){
-          console.log("err");
-      }
       setsuccess(true);
             setTimeout(() => {
                 setsuccess(false);
