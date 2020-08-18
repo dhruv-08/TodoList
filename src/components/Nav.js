@@ -104,6 +104,7 @@ function Nav() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [beforecount, setbeforecount] = useState(0)
+  const [total, settotal] = useState(0)
     const [count, setcount] = useState(0)
     const [aftercount, setaftercount] = useState(0)
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -124,7 +125,7 @@ function Nav() {
       setbeforecount(val.data[0].beforecount);
   }
   send();
-  }, [count,aftercount,beforecount])
+  }, [])
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -161,11 +162,8 @@ function Nav() {
           <Typography variant="h6" noWrap>
             TO-DO
           </Typography>
-          <div style={{paddingLeft:"76%"}}>
-          <AddIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
-          <PieChartIcon style={{paddingLeft:"10%",fontSize:"40px"}} onClick={handleClick}/>
-          <NotificationsIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
-          <SettingsIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
+          <div style={{paddingLeft:"87%"}}>
+          <PieChartIcon style={{fontSize:"40px"}} onClick={handleClick}/>
           </div>
           <Menu
           id="simple-menu"
@@ -186,7 +184,7 @@ function Nav() {
                 { title: 'before date', value: beforecount, color: '#C13C37' },
                 { title: 'after date', value: aftercount, color: '#6A2135' },
             ]}
-            /></Grid>
+          /></Grid>
             <Grid item xs={5}>
           <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -207,6 +205,12 @@ function Nav() {
             </Box></Grid>
             <Grid item xs={2}>Task Completed After date</Grid></Grid>
           </Grid>
+          {/* <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}><Box bgcolor="#a86016" style={{width:"20px",height:"20px"}}>
+            </Box></Grid>
+            <Grid item xs={2}>Incomplete Task</Grid></Grid>
+          </Grid> */}
           </Grid></Grid></Grid></div></MenuItem>
         </Menu>
         </Toolbar>
@@ -231,14 +235,10 @@ function Nav() {
         </div>
         <Divider />
         <List>
-          {['Home','Inbox', 'Today', 'Upcoming', 'Project','logout'].map((text, index) => (
+          {['Home','logout'].map((text, index) => (
             <ListItem button key={text} style={{width:"300px"}}>
                 <Link to="/home">{index===0 && <ListItemIcon><HomeIcon style={{color:"#5cb85c"}}/></ListItemIcon>}</Link>
-                <Link to="/inbox">{index===1 && <ListItemIcon><InboxIcon style={{color:"#0275d8"}} /> </ListItemIcon>}</Link>
-                <Link to="/today">{index===2 && <ListItemIcon><TodayIcon style={{color:"#d9534f"}}/></ListItemIcon>}</Link>
-                <Link to="/upcoming">{index===3 && <ListItemIcon><DateRangeIcon style={{color:"#f0ad4e"}}/></ListItemIcon>}</Link>
-                <Link to="/project">{index===4 && <ListItemIcon><AccountTreeIcon style={{color:"#5bc0de"}}/></ListItemIcon>}</Link>
-                <Link to="/">{index===5 && <ListItemIcon><ExitToAppIcon style={{color:"#d9534f"}} onClick={()=>handleLogout()}/></ListItemIcon>}</Link>
+                <Link to="/">{index===1 && <ListItemIcon><ExitToAppIcon style={{color:"#d9534f"}} onClick={()=>handleLogout()}/></ListItemIcon>}</Link>
               <ListItemText primary={text} />
             </ListItem>
           ))}
@@ -248,10 +248,6 @@ function Nav() {
         <div className={classes.toolbar} />
         <Switch>
           <Route exact path="/home" component={()=><Data/>}/>
-          <Route exact path="/inbox" component={()=><Inbox/>}/>
-          <Route exact path="/today" component={()=><Today/>}/>
-          <Route exact path="/upcoming" component={()=><Upcoming/>}/>
-          <Route exact path="/project" component={()=><Project/>}/>
           <Route exact path="/" component={()=><Login/>}/>
           <Redirect to="/home"/>
       </Switch>

@@ -130,6 +130,9 @@ function Data() {
     };
     const todolist=(e)=>{
       e.preventDefault();
+      if(cal<under && cal!=""){
+          console.log("err");
+      }
       setsuccess(true);
             setTimeout(() => {
                 setsuccess(false);
@@ -155,15 +158,22 @@ function Data() {
         .catch((err)=>{
             console.log("err");
         });
-        
+        Axios.get("/total")
+        .then((res)=>{
+            console.log("Done");
+        })
+        .catch((err)=>{
+            console.log("err");
+        });
         setinp([...inp,cal]);
         var dd=new Date();
           var s=dd.toString()
           setcal(s.substr(4,11));
       }
+      setcal('');
       setTodo([...todo,input]);
       setInput('');
-    //   window.location.reload(true);
+    //   window.location.reload(false);
     }
    const onChange=date=>{
        setdate(date);
@@ -172,10 +182,8 @@ function Data() {
    }
     return (
         <div style={{paddingLeft:"20%"}}>
-           
-            <div style={{paddingLeft:"6%"}}>
-            <h1>TODAY<span style={{fontSize:"10px",color:"grey"}}>{days[d.getDay()]} {d.getDate()} {months[d.getMonth()]}</span></h1>
-            <form>
+            <h1 style={{paddingLeft:"6%"}}>TODAY<span style={{fontSize:"10px",color:"grey"}}>{days[d.getDay()]} {d.getDate()} {months[d.getMonth()]}</span></h1>
+            <form style={{paddingLeft:"6%"}}>
                 <FormControl variant="outlined">
                             <InputLabel>TO-DO ADD</InputLabel>
                             <OutlinedInput autoComplete="off"
@@ -205,7 +213,6 @@ function Data() {
                             </Button>
                             </FormControl></form><br/><br/>
                 
-                </div>
                 {lis.length===0 &&<span style={{textAlign:"center",paddingLeft:"50%"}}><SentimentVeryDissatisfiedIcon style={{fontSize:"50"}}/></span>}
                 {lis.map((t,idx)=>(
                 <List key={lis[idx]._id} style={{textAlign:"center"}}>

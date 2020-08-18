@@ -12,6 +12,10 @@ var User=new schema({
             required:true
         }
     }],
+        total:{
+            type:Number,
+            default:0
+        },
         beforecount:{
             type:Number,
             default:0

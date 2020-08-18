@@ -55,7 +55,7 @@ router.post('/todo',(req,res,next)=>{
         $push:{"list":{
           text:req.body.t,
           date:req.body.dat
-        }}
+        }},
       }, function(err, affected, resp) {
         console.log("Ohh");
      });
@@ -74,6 +74,19 @@ router.post('/delup',(req,res,next)=>{
     }
   });
 });
+router.get("/total",(req,res,next)=>{
+  User.findOne({username:req.session.passport.user})
+  .then((user)=>{
+    if(user){
+      var tot=user.total+1;
+      User.update({username:req.session.passport.user},{
+        total:tot,
+      }, function(err, affected, resp) {
+        console.log("Ohh");
+     });
+    }
+  })
+})
 router.post('/edit',(req,res,next)=>{
   User.findOne({username:req.session.passport.user})
   .then((user)=>{
@@ -100,8 +113,10 @@ router.post("/count",(req,res,next)=>{
   .then((user)=>{
     if(user){
       var val=user.count+1;
+      var tot=user.total+1;
       User.update({username:req.session.passport.user},{
-        count:val
+        count:val,
+        total:tot,
       }, function(err, affected, resp) {
         console.log("Ohh");
      });
@@ -113,8 +128,10 @@ router.post("/beforecount",(req,res,next)=>{
   .then((user)=>{
     if(user){
       var val=user.beforecount+1;
+      var tot=user.total+1;
       User.update({username:req.session.passport.user},{
-        beforecount:val
+        beforecount:val,
+        total:tot
       }, function(err, affected, resp) {
         console.log("Ohh");
      });
@@ -126,8 +143,10 @@ router.post("/aftercount",(req,res,next)=>{
   .then((user)=>{
     if(user){
       var val=user.aftercount+1;
+      var tot=user.total+1;
       User.update({username:req.session.passport.user},{
-        aftercount:val
+        aftercount:val,
+        total:tot
       }, function(err, affected, resp) {
         console.log("Ohh");
      });

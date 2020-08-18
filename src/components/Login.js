@@ -143,7 +143,7 @@ function Login() {
                                 labelWidth={70}
                             />
                             </FormControl><br/><br/>
-                            <Button disabled={!loguser || !logpass} type="submit" variant="contained" color="primary" >Submit<Icon style={{padding:"2%"}}/></Button><Link to="/forget" style={{textDecoration:"none",color:"red",paddingLeft:"3%"}}>Forgot password ?</Link>
+                            <Button disabled={!loguser || !logpass} type="submit" variant="contained" color="primary" >Submit<Icon style={{padding:"2%"}}/></Button>
                             </form>
                         </Grid>
                         <Grid item xs><div className="outer">
