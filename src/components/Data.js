@@ -10,7 +10,7 @@ import Axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import Checkbox from '@material-ui/core/Checkbox';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { PieChart } from 'react-minimal-pie-chart';
+
 function Data() {
     var d=new Date();
     var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -31,9 +31,6 @@ function Data() {
     const [checked, setChecked] =useState(false);
     const [under, setunder] = useState((d.getDate()).toString());
     const [open, setOpen] = useState(false);
-    const [beforecount, setbeforecount] = useState(0)
-    const [count, setcount] = useState(0)
-    const [aftercount, setaftercount] = useState(0)
     const handleClickOpen = (idx) => {
         setindex(idx);
         setOpen(true);
@@ -80,21 +77,16 @@ function Data() {
             setTimeout(() => {
                 setchange(false);
             }, 4000);
-            window.location.reload(true);
+            // window.location.reload(true);
     }
     useEffect(() => {
         async function fun(){
             const val=await Axios.get("/todolist");
             setlis(val.data[0].list);
         }
-        async function send(){
-            const val=await Axios.get("/data");
-            setcount(val.data[0].count);
-            setaftercount(val.data[0].aftercount);
-            setbeforecount(val.data[0].beforecount);
-        }
+        
         fun();
-        send();
+        
     }, [input,edit]);
     function handleedit(e){
         e.preventDefault();
@@ -171,7 +163,7 @@ function Data() {
       }
       setTodo([...todo,input]);
       setInput('');
-      window.location.reload(true);
+    //   window.location.reload(true);
     }
    const onChange=date=>{
        setdate(date);
@@ -180,13 +172,7 @@ function Data() {
    }
     return (
         <div style={{paddingLeft:"20%"}}>
-            <PieChart style={{width:"100px",height:"100px"}}
-                data={[
-                    { title: 'On date', value: count, color: '#E38627' },
-                    { title: 'before date', value: beforecount, color: '#C13C37' },
-                    { title: 'after date', value: aftercount, color: '#6A2135' },
-                ]}
-                />
+           
             <div style={{paddingLeft:"6%"}}>
             <h1>TODAY<span style={{fontSize:"10px",color:"grey"}}>{days[d.getDay()]} {d.getDate()} {months[d.getMonth()]}</span></h1>
             <form>

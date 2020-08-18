@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx';
 import Data from './Data'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -33,6 +33,10 @@ import HomeIcon from '@material-ui/icons/Home';
 import Login from './Login'
 import Axios from 'axios';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { PieChart } from 'react-minimal-pie-chart';
+import { Box, Grid } from '@material-ui/core';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -99,11 +103,28 @@ function Nav() {
     const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
+  const [beforecount, setbeforecount] = useState(0)
+    const [count, setcount] = useState(0)
+    const [aftercount, setaftercount] = useState(0)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-  
+  useEffect(() => {
+    async function send(){
+      const val=await Axios.get("/data");
+      setcount(val.data[0].count);
+      setaftercount(val.data[0].aftercount);
+      setbeforecount(val.data[0].beforecount);
+  }
+  send();
+  }, [count,aftercount,beforecount])
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -142,10 +163,52 @@ function Nav() {
           </Typography>
           <div style={{paddingLeft:"76%"}}>
           <AddIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
-          <PieChartIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
+          <PieChartIcon style={{paddingLeft:"10%",fontSize:"40px"}} onClick={handleClick}/>
           <NotificationsIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
           <SettingsIcon style={{paddingLeft:"10%",fontSize:"40px"}}/>
           </div>
+          <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>
+            <div>
+            <h1 style={{textAlign:"center"}}>Productivity</h1><Divider /><br/>
+            <Grid container spacing={2}>
+              <Grid item xs={2}></Grid>
+            <Grid item xs={4}> <PieChart style={{width:"200px",height:"200px"}}
+      
+            data={[
+                { title: 'On date', value: count, color: '#E38627' },
+                { title: 'before date', value: beforecount, color: '#C13C37' },
+                { title: 'after date', value: aftercount, color: '#6A2135' },
+            ]}
+            /></Grid>
+            <Grid item xs={5}>
+          <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+            <Grid item xs={2}><Box bgcolor="#E38627" style={{width:"20px",height:"20px"}}>
+            </Box></Grid>
+            <Grid item xs={2}>Task Completed On date</Grid></Grid>
+          </Grid>
+          <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}><Box bgcolor="#C13C37" style={{width:"20px",height:"20px"}}>
+            </Box></Grid>
+            <Grid item xs={2}>Task Completed Before date</Grid></Grid>
+          </Grid>
+          <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}><Box bgcolor="#6A2135" style={{width:"20px",height:"20px"}}>
+            </Box></Grid>
+            <Grid item xs={2}>Task Completed After date</Grid></Grid>
+          </Grid>
+          </Grid></Grid></Grid></div></MenuItem>
+        </Menu>
         </Toolbar>
       </AppBar>
       <Drawer
